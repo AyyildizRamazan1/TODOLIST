@@ -76,8 +76,9 @@ namespace TODOLIST
             this.calendarControl1.Name = "calendarControl1";
             this.calendarControl1.Size = new System.Drawing.Size(362, 324);
             this.calendarControl1.TabIndex = 2;
+            this.calendarControl1.SelectionChanged += new System.EventHandler(this.calendarControl1_SelectionChanged);
             this.calendarControl1.CustomDrawDayNumberCell += new DevExpress.XtraEditors.Calendar.CustomDrawDayNumberCellEventHandler(this.calendarControl1_CustomDrawDayNumberCell_1);
-            this.calendarControl1.Click += new System.EventHandler(this.calendarControl1_Click);
+            this.calendarControl1.DateTimeChanged += new System.EventHandler(this.calendarControl1_DateTimeChanged);
             // 
             // label3
             // 
@@ -119,7 +120,6 @@ namespace TODOLIST
             this.dataGridView1.Size = new System.Drawing.Size(1330, 360);
             this.dataGridView1.TabIndex = 6;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
-            this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
             // 
             // simpleButton1
             // 
@@ -248,6 +248,7 @@ namespace TODOLIST
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "TO DO LIST";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.calendarControl1.CalendarTimeProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
