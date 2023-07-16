@@ -340,7 +340,7 @@ namespace TODOLIST
                         }
                     }
 
-                    // Excel dosyasını kaydet ve Excel uygulamasını kapat
+                    // Excel dosyasını kaydet ve Excel uygulamasını kapatma
                     workbook.SaveAs(dosyaYolu);
                     workbook.Close();
                     excelApp.Quit();
