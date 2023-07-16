@@ -47,6 +47,7 @@ namespace TODOLIST
             this.label3 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.btnTxtKayit = new DevExpress.XtraEditors.SimpleButton();
+            this.btnEXCELkyt = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.calendarControl1.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -243,7 +244,7 @@ namespace TODOLIST
             // btnTxtKayit
             // 
             this.btnTxtKayit.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnTxtKayit.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton6.ImageOptions.Image")));
+            this.btnTxtKayit.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnTxtKayit.ImageOptions.Image")));
             this.btnTxtKayit.Location = new System.Drawing.Point(795, 166);
             this.btnTxtKayit.Name = "btnTxtKayit";
             this.btnTxtKayit.Size = new System.Drawing.Size(208, 41);
@@ -251,12 +252,23 @@ namespace TODOLIST
             this.btnTxtKayit.Text = "TXT Kayıt";
             this.btnTxtKayit.Click += new System.EventHandler(this.btnTxtKayit_Click);
             // 
+            // btnEXCELkyt
+            // 
+            this.btnEXCELkyt.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton6.ImageOptions.Image")));
+            this.btnEXCELkyt.Location = new System.Drawing.Point(794, 213);
+            this.btnEXCELkyt.Name = "btnEXCELkyt";
+            this.btnEXCELkyt.Size = new System.Drawing.Size(209, 41);
+            this.btnEXCELkyt.TabIndex = 19;
+            this.btnEXCELkyt.Text = "EXCEL Kayıt";
+            this.btnEXCELkyt.Click += new System.EventHandler(this.btnEXCELkyt_Click);
+            // 
             // Form1
             // 
             this.Appearance.BackColor = System.Drawing.Color.LavenderBlush;
             this.Appearance.Options.UseBackColor = true;
             this.Appearance.Options.UseFont = true;
             this.ClientSize = new System.Drawing.Size(1362, 770);
+            this.Controls.Add(this.btnEXCELkyt);
             this.Controls.Add(this.btnTxtKayit);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label3);
@@ -307,6 +319,7 @@ namespace TODOLIST
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox1;
         private DevExpress.XtraEditors.SimpleButton btnTxtKayit;
+        private DevExpress.XtraEditors.SimpleButton btnEXCELkyt;
     }
 }
 

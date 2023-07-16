@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.Data.Sql;
 using System.IO;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace TODOLIST
 {
@@ -248,7 +249,7 @@ namespace TODOLIST
                     string klasorAdi = "Görevler";
                     string klasorYolu = Path.Combine(masaustuKlasoru, klasorAdi);
 
-                    
+
                     if (!Directory.Exists(klasorYolu))
                         Directory.CreateDirectory(klasorYolu);
 
@@ -259,7 +260,7 @@ namespace TODOLIST
                         writer.WriteLine($"Tarih: {tarih:dd.MM.yyyy}");
                         writer.WriteLine();
 
-                        
+
                         foreach (DataGridViewRow row in dataGridView1.Rows)
                         {
                             DateTime currentTarih = Convert.ToDateTime(row.Cells["Tarih"].Value);
@@ -270,7 +271,7 @@ namespace TODOLIST
                                 List<string> yapilacaklarListe = yapilacaklarListesi.Split(',').Select(item => "*" + item.Trim()).ToList();
 
                                 writer.WriteLine($"Yapılacak İş: {yapilacakIs}");
-                                
+
                                 foreach (string yapilacak in yapilacaklarListe)
                                 {
                                     writer.WriteLine(yapilacak);
@@ -289,7 +290,71 @@ namespace TODOLIST
             }
             else
             {
-                XtraMessageBox.Show("Kayıt seçiniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                XtraMessageBox.Show("Lütfen bir kayıt seçiniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btnEXCELkyt_Click(object sender, EventArgs e)
+        {
+
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                try
+                {
+                    DateTime tarih = Convert.ToDateTime(dataGridView1.SelectedRows[0].Cells["Tarih"].Value);
+                    string masaustuKlasoru = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                    string klasorAdi = "Görevler";
+                    string klasorYolu = Path.Combine(masaustuKlasoru, klasorAdi);
+
+
+                    if (!Directory.Exists(klasorYolu))// kalsör yoksa buradan oluşturulacak klasör adında değişiklik yaparsakta kullanılacak
+                        Directory.CreateDirectory(klasorYolu);
+
+                    string dosyaAdi = $"{tarih:yyyy-MM-dd}_Kayitlar.xlsx";
+                    string dosyaYolu = Path.Combine(klasorYolu, dosyaAdi);
+
+                    Microsoft.Office.Interop.Excel.Application excelApp = new Microsoft.Office.Interop.Excel.Application();
+                    Microsoft.Office.Interop.Excel.Workbook workbook = excelApp.Workbooks.Add();
+                    Microsoft.Office.Interop.Excel.Worksheet worksheet = workbook.ActiveSheet;
+
+                    int satir = 1;
+
+                    worksheet.Cells[satir, 1] = "Tarih";
+                    worksheet.Cells[satir, 2] = "Yapılacak İş";
+                    worksheet.Cells[satir, 3] = "Yapılacaklar Listesi";
+
+                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    {
+                        DateTime currentTarih = Convert.ToDateTime(row.Cells["Tarih"].Value);
+                        if (currentTarih.Date == tarih.Date)
+                        {
+                            string yapilacakIs = row.Cells["Yapılacak_İş"].Value.ToString();
+                            string yapilacaklarListesi = row.Cells["Yapılacaklar_Listesi"].Value.ToString();
+
+                            satir++;
+                            worksheet.Cells[satir, 1] = currentTarih.ToString("dd.MM.yyyy");
+                            worksheet.Cells[satir, 2] = yapilacakIs;
+
+                            List<string> yapilacaklarListe = yapilacaklarListesi.Split(',').Select(item => "*" + item.Trim()).ToList();
+                            worksheet.Cells[satir, 3] = string.Join(Environment.NewLine, yapilacaklarListe);
+                        }
+                    }
+
+                    // Excel dosyasını kaydet ve Excel uygulamasını kapat
+                    workbook.SaveAs(dosyaYolu);
+                    workbook.Close();
+                    excelApp.Quit();
+
+                    XtraMessageBox.Show("Veriler dosyaya kaydedildi.", "Bilgi", MessageBoxButtons.OK);
+                }
+                catch (Exception hata)
+                {
+                    XtraMessageBox.Show("Hata meydana geldi: " + hata.Message);
+                }
+            }
+            else
+            {
+                XtraMessageBox.Show("Lütfen bir kayıt seçiniz", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }
