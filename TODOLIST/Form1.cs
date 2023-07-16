@@ -12,12 +12,14 @@ using DevExpress.XtraEditors.Controls;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.Data.Sql;
+using System.IO;
 
 namespace TODOLIST
 {
     public partial class Form1 : XtraForm
     {
-        readonly SqlConnection baglanti = new SqlConnection("Data Source=RAMAZAN;Initial Catalog=TODOLIST;Integrated Security=True");
+        ///readonly SqlConnection baglanti = new SqlConnection("Server=192.168.1.22;Initial Catalog=TODOLIST;Integrated Security=False;User Id=sa;Password=Sifre123");
+        readonly SqlConnection baglanti = new SqlConnection("Data Source = RAMAZAN; Initial Catalog = TODOLIST; Integrated Security = True");
         readonly List<DateTime> tarihler = new List<DateTime>();
 
         public Form1()
@@ -232,6 +234,62 @@ namespace TODOLIST
             if (baglanti.State != ConnectionState.Closed)
             {
                 baglanti.Close();
+            }
+        }
+
+        private void btnTxtKayit_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                try
+                {
+                    DateTime tarih = Convert.ToDateTime(dataGridView1.SelectedRows[0].Cells["Tarih"].Value);
+                    string masaustuKlasoru = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                    string klasorAdi = "Görevler";
+                    string klasorYolu = Path.Combine(masaustuKlasoru, klasorAdi);
+
+                    
+                    if (!Directory.Exists(klasorYolu))
+                        Directory.CreateDirectory(klasorYolu);
+
+                    string dosyaYolu = Path.Combine(klasorYolu, $"{tarih:yyyy-MM-dd}_Kayitlar.txt");
+
+                    using (StreamWriter writer = new StreamWriter(dosyaYolu))
+                    {
+                        writer.WriteLine($"Tarih: {tarih:dd.MM.yyyy}");
+                        writer.WriteLine();
+
+                        
+                        foreach (DataGridViewRow row in dataGridView1.Rows)
+                        {
+                            DateTime currentTarih = Convert.ToDateTime(row.Cells["Tarih"].Value);
+                            if (currentTarih.Date == tarih.Date)
+                            {
+                                string yapilacakIs = row.Cells["Yapılacak_İş"].Value.ToString();
+                                string yapilacaklarListesi = row.Cells["Yapılacaklar_Listesi"].Value.ToString();
+                                List<string> yapilacaklarListe = yapilacaklarListesi.Split(',').Select(item => "*" + item.Trim()).ToList();
+
+                                writer.WriteLine($"Yapılacak İş: {yapilacakIs}");
+                                
+                                foreach (string yapilacak in yapilacaklarListe)
+                                {
+                                    writer.WriteLine(yapilacak);
+                                }
+                                writer.WriteLine("--------------------------------------------------");
+                            }
+                        }
+                    }
+
+                    XtraMessageBox.Show("Veriler dosyaya kaydedildi.", "Bilgi", MessageBoxButtons.OK);
+                }
+                catch (Exception hata)
+                {
+                    XtraMessageBox.Show("Hata meydana geldi: " + hata.Message);
+                }
+            }
+            else
+            {
+                XtraMessageBox.Show("Kayıt seçiniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }
