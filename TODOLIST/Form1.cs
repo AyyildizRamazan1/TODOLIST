@@ -14,11 +14,16 @@ using System.Data.SqlClient;
 using System.Data.Sql;
 using System.IO;
 using Excel = Microsoft.Office.Interop.Excel;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+
+
 
 namespace TODOLIST
 {
     public partial class Form1 : XtraForm
     {
+        
         ///readonly SqlConnection baglanti = new SqlConnection("Server=192.168.1.22;Initial Catalog=TODOLIST;Integrated Security=False;User Id=sa;Password=Sifre123");
         readonly SqlConnection baglanti = new SqlConnection("Data Source = RAMAZAN; Initial Catalog = TODOLIST; Integrated Security = True");
         readonly List<DateTime> tarihler = new List<DateTime>();
@@ -36,6 +41,7 @@ namespace TODOLIST
             baglanti.Open();
             GetTarihlerFromSQL();
             GorevGetir();
+            
         }
 
         public void GetTarihlerFromSQL()
@@ -309,14 +315,10 @@ namespace TODOLIST
                     saveFileDialog1.Filter = "Excel Dosyaları|*.xlsx|Tüm Dosyalar|*.*";
                     saveFileDialog1.Title = "Excel Dosyasını Kaydet";
                     saveFileDialog1.FileName = $"{tarih:yyyy-MM-dd}_Kayitlar.xlsx";
-
-                    
-                    
-
                     // Kullanıcı bir konum seçerse
                     if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                     {
-                        
+
 
                         Microsoft.Office.Interop.Excel.Application excelApp = new Microsoft.Office.Interop.Excel.Application();
                         Microsoft.Office.Interop.Excel.Workbook workbook = excelApp.Workbooks.Add();
@@ -393,14 +395,11 @@ namespace TODOLIST
                 XtraMessageBox.Show("Lütfen bir kayıt seçiniz", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
-
-
         private void textBox3_Enter(object sender, EventArgs e)
         {
             if (textBox3.Text == "dd.MM.yyyy")
             {
-                textBox3.Text =" ";
+                textBox3.Text = " ";
                 textBox3.ForeColor = Color.Black;
             }
         }
@@ -413,6 +412,86 @@ namespace TODOLIST
                 textBox3.ForeColor = Color.LightGray;
 
             }
+        }
+
+        private void btnPDFkyt_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                try
+                {
+                    DateTime tarih = Convert.ToDateTime(dataGridView1.SelectedRows[0].Cells["Tarih"].Value);
+
+                    
+                    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                    saveFileDialog.Filter = "PDF Files (*.pdf)|*.pdf";
+                    saveFileDialog.FileName = $"{tarih:yyyy-MM-dd}_Kayitlar.pdf"; // Varsayılan dosya adı
+                    saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop); // Başlangıçta masaüstü gösterilsin
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string dosyaYolu = saveFileDialog.FileName;
+
+                        
+                        Document doc = new Document(PageSize.A4);
+
+                        
+                        PdfWriter.GetInstance(doc, new FileStream(dosyaYolu, FileMode.Create));
+                        doc.Open();
+
+                        
+                        doc.Add(new Paragraph($"Tarih: {tarih:dd.MM.yyyy}"));
+                        doc.Add(new Paragraph(""));
+
+                        foreach (DataGridViewRow row in dataGridView1.Rows)
+                        {
+                            DateTime currentTarih = Convert.ToDateTime(row.Cells["Tarih"].Value);
+                            if (currentTarih.Date == tarih.Date)
+                            {
+                                string yapilacakIs = row.Cells["Yapılacak_İş"].Value.ToString();
+                                string yapilacaklarListesi = row.Cells["Yapılacaklar_Listesi"].Value.ToString();
+                                List<string> yapilacaklarListe = yapilacaklarListesi.Split(',').Select(item => "*" + item.Trim()).ToList();
+
+                                // Yapılacak iş ve yapılacaklar listesi ekleyelim
+                                doc.Add(new Paragraph($"Yapılacak İş: {yapilacakIs}"));
+
+                                foreach (string yapilacak in yapilacaklarListe)
+                                {
+                                    doc.Add(new Paragraph(yapilacak));
+                                }
+
+                                
+                                doc.Add(new Paragraph("--------------------------------------------------"));
+                            }
+                        }
+
+                        
+                        doc.Close();
+
+                        XtraMessageBox.Show("Veriler PDF olarak kaydedildi.", "Bilgi", MessageBoxButtons.OK);
+                    }
+                }
+                catch (Exception hata)
+                {
+                    XtraMessageBox.Show("Hata meydana geldi: " + hata.Message);
+                }
+            }
+            else
+            {
+                XtraMessageBox.Show("Lütfen bir kayıt seçiniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btnYazıcı_Click(object sender, EventArgs e)
+        {
+
+            
+        }
+
+        private void btnBildirim_Click(object sender, EventArgs e)
+        {
+
+            
         }
     }
 }
