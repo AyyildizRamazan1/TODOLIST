@@ -34,7 +34,6 @@ namespace TODOLIST
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
-            this.listBox1 = new System.Windows.Forms.ListBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.simpleButton3 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton4 = new DevExpress.XtraEditors.SimpleButton();
@@ -43,11 +42,11 @@ namespace TODOLIST
             this.simpleButton5 = new DevExpress.XtraEditors.SimpleButton();
             this.label4 = new System.Windows.Forms.Label();
             this.lblTarih = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.btnTxtKayit = new DevExpress.XtraEditors.SimpleButton();
             this.btnEXCELkyt = new DevExpress.XtraEditors.SimpleButton();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.calendarControl1.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -90,13 +89,13 @@ namespace TODOLIST
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 410);
+            this.dataGridView1.Location = new System.Drawing.Point(0, 351);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(1362, 360);
+            this.dataGridView1.Size = new System.Drawing.Size(1362, 419);
             this.dataGridView1.TabIndex = 6;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             // 
@@ -104,7 +103,7 @@ namespace TODOLIST
             // 
             this.simpleButton1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.simpleButton1.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton1.ImageOptions.Image")));
-            this.simpleButton1.Location = new System.Drawing.Point(516, 225);
+            this.simpleButton1.Location = new System.Drawing.Point(516, 181);
             this.simpleButton1.Name = "simpleButton1";
             this.simpleButton1.Size = new System.Drawing.Size(237, 33);
             this.simpleButton1.TabIndex = 7;
@@ -115,23 +114,12 @@ namespace TODOLIST
             // 
             this.simpleButton2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.simpleButton2.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton2.ImageOptions.Image")));
-            this.simpleButton2.Location = new System.Drawing.Point(516, 303);
+            this.simpleButton2.Location = new System.Drawing.Point(516, 259);
             this.simpleButton2.Name = "simpleButton2";
             this.simpleButton2.Size = new System.Drawing.Size(237, 33);
             this.simpleButton2.TabIndex = 8;
             this.simpleButton2.Text = "Görevi Sil";
             this.simpleButton2.Click += new System.EventHandler(this.simpleButton2_Click);
-            // 
-            // listBox1
-            // 
-            this.listBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.HorizontalScrollbar = true;
-            this.listBox1.ItemHeight = 22;
-            this.listBox1.Location = new System.Drawing.Point(1009, 11);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(270, 378);
-            this.listBox1.TabIndex = 9;
             // 
             // textBox2
             // 
@@ -167,7 +155,7 @@ namespace TODOLIST
             // 
             this.btnGuncelle.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnGuncelle.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnGuncelle.ImageOptions.Image")));
-            this.btnGuncelle.Location = new System.Drawing.Point(516, 264);
+            this.btnGuncelle.Location = new System.Drawing.Point(516, 220);
             this.btnGuncelle.Name = "btnGuncelle";
             this.btnGuncelle.Size = new System.Drawing.Size(237, 33);
             this.btnGuncelle.TabIndex = 17;
@@ -177,16 +165,19 @@ namespace TODOLIST
             // textBox3
             // 
             this.textBox3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.textBox3.Location = new System.Drawing.Point(516, 150);
+            this.textBox3.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.textBox3.Location = new System.Drawing.Point(516, 106);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(237, 30);
             this.textBox3.TabIndex = 14;
+            this.textBox3.Enter += new System.EventHandler(this.textBox3_Enter);
+            this.textBox3.Leave += new System.EventHandler(this.textBox3_Leave);
             // 
             // simpleButton5
             // 
             this.simpleButton5.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.simpleButton5.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton5.ImageOptions.Image")));
-            this.simpleButton5.Location = new System.Drawing.Point(516, 186);
+            this.simpleButton5.Location = new System.Drawing.Point(516, 142);
             this.simpleButton5.Name = "simpleButton5";
             this.simpleButton5.Size = new System.Drawing.Size(237, 33);
             this.simpleButton5.TabIndex = 13;
@@ -197,7 +188,7 @@ namespace TODOLIST
             // 
             this.label4.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(418, 153);
+            this.label4.Location = new System.Drawing.Point(418, 109);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(92, 22);
             this.label4.TabIndex = 15;
@@ -212,16 +203,6 @@ namespace TODOLIST
             this.lblTarih.Size = new System.Drawing.Size(116, 22);
             this.lblTarih.TabIndex = 5;
             this.lblTarih.Text = "Seçilen Tarih";
-            // 
-            // label5
-            // 
-            this.label5.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(467, 119);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(286, 22);
-            this.label5.TabIndex = 16;
-            this.label5.Text = "(\"dd.MM.yyyy\") formatında giriniz";
             // 
             // label3
             // 
@@ -254,13 +235,24 @@ namespace TODOLIST
             // 
             // btnEXCELkyt
             // 
-            this.btnEXCELkyt.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton6.ImageOptions.Image")));
+            this.btnEXCELkyt.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnEXCELkyt.ImageOptions.Image")));
             this.btnEXCELkyt.Location = new System.Drawing.Point(794, 213);
             this.btnEXCELkyt.Name = "btnEXCELkyt";
             this.btnEXCELkyt.Size = new System.Drawing.Size(209, 41);
             this.btnEXCELkyt.TabIndex = 19;
             this.btnEXCELkyt.Text = "EXCEL Kayıt";
             this.btnEXCELkyt.Click += new System.EventHandler(this.btnEXCELkyt_Click);
+            // 
+            // listBox1
+            // 
+            this.listBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.HorizontalScrollbar = true;
+            this.listBox1.ItemHeight = 22;
+            this.listBox1.Location = new System.Drawing.Point(1009, 11);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(270, 334);
+            this.listBox1.TabIndex = 9;
             // 
             // Form1
             // 
@@ -273,7 +265,6 @@ namespace TODOLIST
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.btnGuncelle);
-            this.Controls.Add(this.label5);
             this.Controls.Add(this.simpleButton4);
             this.Controls.Add(this.lblTarih);
             this.Controls.Add(this.label4);
@@ -306,7 +297,6 @@ namespace TODOLIST
         private System.Windows.Forms.DataGridView dataGridView1;
         private DevExpress.XtraEditors.SimpleButton simpleButton1;
         private DevExpress.XtraEditors.SimpleButton simpleButton2;
-        private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.TextBox textBox2;
         private DevExpress.XtraEditors.SimpleButton simpleButton3;
         private DevExpress.XtraEditors.SimpleButton simpleButton4;
@@ -315,11 +305,11 @@ namespace TODOLIST
         private DevExpress.XtraEditors.SimpleButton simpleButton5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label lblTarih;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox1;
         private DevExpress.XtraEditors.SimpleButton btnTxtKayit;
         private DevExpress.XtraEditors.SimpleButton btnEXCELkyt;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
 
