@@ -29,6 +29,7 @@ namespace TODOLIST
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.calendarControl1 = new DevExpress.XtraEditors.Controls.CalendarControl();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -49,8 +50,9 @@ namespace TODOLIST
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.btnPDFkyt = new DevExpress.XtraEditors.SimpleButton();
             this.btnYazıcı = new DevExpress.XtraEditors.SimpleButton();
-            this.simpleButton6 = new DevExpress.XtraEditors.SimpleButton();
+            this.btnHTMLkyt = new DevExpress.XtraEditors.SimpleButton();
             this.btnBildirim = new DevExpress.XtraEditors.SimpleButton();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.calendarControl1.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -298,26 +300,32 @@ namespace TODOLIST
             this.btnYazıcı.Text = "Yazıcı";
             this.btnYazıcı.Click += new System.EventHandler(this.btnYazıcı_Click);
             // 
-            // simpleButton6
+            // btnHTMLkyt
             // 
-            this.simpleButton6.Appearance.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.simpleButton6.Appearance.Options.UseFont = true;
-            this.simpleButton6.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton6.ImageOptions.Image")));
-            this.simpleButton6.Location = new System.Drawing.Point(823, 247);
-            this.simpleButton6.Name = "simpleButton6";
-            this.simpleButton6.Size = new System.Drawing.Size(122, 41);
-            this.simpleButton6.TabIndex = 22;
-            this.simpleButton6.Text = "HTML Kayıt";
+            this.btnHTMLkyt.Appearance.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.btnHTMLkyt.Appearance.Options.UseFont = true;
+            this.btnHTMLkyt.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnHTMLkyt.ImageOptions.Image")));
+            this.btnHTMLkyt.Location = new System.Drawing.Point(823, 247);
+            this.btnHTMLkyt.Name = "btnHTMLkyt";
+            this.btnHTMLkyt.Size = new System.Drawing.Size(122, 41);
+            this.btnHTMLkyt.TabIndex = 22;
+            this.btnHTMLkyt.Text = "HTML Kayıt";
+            this.btnHTMLkyt.Click += new System.EventHandler(this.btnHTMLkyt_Click);
             // 
             // btnBildirim
             // 
-            this.btnBildirim.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton7.ImageOptions.Image")));
+            this.btnBildirim.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnBildirim.ImageOptions.Image")));
             this.btnBildirim.Location = new System.Drawing.Point(951, 246);
             this.btnBildirim.Name = "btnBildirim";
             this.btnBildirim.Size = new System.Drawing.Size(123, 41);
             this.btnBildirim.TabIndex = 23;
             this.btnBildirim.Text = "Bildirim";
             this.btnBildirim.Click += new System.EventHandler(this.btnBildirim_Click);
+            // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.Visible = true;
             // 
             // Form1
             // 
@@ -326,7 +334,7 @@ namespace TODOLIST
             this.Appearance.Options.UseFont = true;
             this.ClientSize = new System.Drawing.Size(1362, 770);
             this.Controls.Add(this.btnBildirim);
-            this.Controls.Add(this.simpleButton6);
+            this.Controls.Add(this.btnHTMLkyt);
             this.Controls.Add(this.btnYazıcı);
             this.Controls.Add(this.btnPDFkyt);
             this.Controls.Add(this.btnEXCELkyt);
@@ -381,8 +389,9 @@ namespace TODOLIST
         private System.Windows.Forms.ListBox listBox1;
         private DevExpress.XtraEditors.SimpleButton btnPDFkyt;
         private DevExpress.XtraEditors.SimpleButton btnYazıcı;
-        private DevExpress.XtraEditors.SimpleButton simpleButton6;
+        private DevExpress.XtraEditors.SimpleButton btnHTMLkyt;
         private DevExpress.XtraEditors.SimpleButton btnBildirim;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
     }
 }
 

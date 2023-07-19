@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Globalization;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DevExpress.XtraEditors;
-using DevExpress.XtraEditors.Controls;
 using System.Windows.Forms;
 using System.Data.SqlClient;
-using System.Data.Sql;
 using System.IO;
 using Excel = Microsoft.Office.Interop.Excel;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
+using iText.Kernel.Pdf;
+using iText.Kernel.Geom;
+using iText.Layout;
+using iText.Layout.Element;
 
 
 
@@ -23,7 +20,7 @@ namespace TODOLIST
 {
     public partial class Form1 : XtraForm
     {
-        
+
         ///readonly SqlConnection baglanti = new SqlConnection("Server=192.168.1.22;Initial Catalog=TODOLIST;Integrated Security=False;User Id=sa;Password=Sifre123");
         readonly SqlConnection baglanti = new SqlConnection("Data Source = RAMAZAN; Initial Catalog = TODOLIST; Integrated Security = True");
         readonly List<DateTime> tarihler = new List<DateTime>();
@@ -41,7 +38,7 @@ namespace TODOLIST
             baglanti.Open();
             GetTarihlerFromSQL();
             GorevGetir();
-            
+
         }
 
         public void GetTarihlerFromSQL()
@@ -101,6 +98,13 @@ namespace TODOLIST
             GorevGetir();
             calendarControl1.Refresh();
             calendarControl1_DateTimeChanged(null, null);
+
+            string mesaj = "Kayıt tamamlandı";
+            string baslik = "Bildirim Başlığı";
+
+
+            notifyIcon1.ShowBalloonTip(3000, baslik, mesaj, ToolTipIcon.Info);
+
         }
 
         private void simpleButton3_Click(object sender, EventArgs e)
@@ -320,15 +324,15 @@ namespace TODOLIST
                     {
 
 
-                        Microsoft.Office.Interop.Excel.Application excelApp = new Microsoft.Office.Interop.Excel.Application();
-                        Microsoft.Office.Interop.Excel.Workbook workbook = excelApp.Workbooks.Add();
-                        Microsoft.Office.Interop.Excel.Worksheet worksheet = workbook.ActiveSheet;
+                        Excel.Application excelApp = new Microsoft.Office.Interop.Excel.Application();
+                        Excel.Workbook workbook = excelApp.Workbooks.Add();
+                        Excel.Worksheet worksheet = workbook.ActiveSheet;
 
                         int satir = 1;
                         string[] basliklar = { "Tarih", "Yapılacak İş", "Yapılacaklar Listesi" };
                         int baslikSutun = 1;
-                        System.Drawing.Color baslikArkaPlanRenk = System.Drawing.Color.Black;
-                        System.Drawing.Color baslikYaziRenk = System.Drawing.Color.White;
+                        Color baslikArkaPlanRenk = Color.Black;
+                        Color baslikYaziRenk = Color.White;
 
                         int baslikYaziBoyut = 20;
 
@@ -363,13 +367,13 @@ namespace TODOLIST
                                 worksheet.Cells[satir, 3] = string.Join(Environment.NewLine, yapilacaklarListe);
 
                                 // Dikey ve yatay hizalamayı ortala
-                                worksheet.Cells[satir, 1].VerticalAlignment = Microsoft.Office.Interop.Excel.XlVAlign.xlVAlignCenter;
-                                worksheet.Cells[satir, 2].VerticalAlignment = Microsoft.Office.Interop.Excel.XlVAlign.xlVAlignCenter;
-                                worksheet.Cells[satir, 3].VerticalAlignment = Microsoft.Office.Interop.Excel.XlVAlign.xlVAlignCenter;
+                                worksheet.Cells[satir, 1].VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+                                worksheet.Cells[satir, 2].VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+                                worksheet.Cells[satir, 3].VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
 
-                                worksheet.Cells[satir, 1].HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignLeft;
-                                worksheet.Cells[satir, 2].HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignLeft;
-                                worksheet.Cells[satir, 3].HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignLeft;
+                                worksheet.Cells[satir, 1].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+                                worksheet.Cells[satir, 2].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+                                worksheet.Cells[satir, 3].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
 
                                 worksheet.Cells[satir, 1].BorderAround(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin);
                                 worksheet.Cells[satir, 2].BorderAround(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin);
@@ -399,14 +403,14 @@ namespace TODOLIST
         {
             if (textBox3.Text == "dd.MM.yyyy")
             {
-                textBox3.Text = " ";
+                textBox3.Text = "";
                 textBox3.ForeColor = Color.Black;
             }
         }
 
         private void textBox3_Leave(object sender, EventArgs e)
         {
-            if (textBox3.Text == " ")
+            if (textBox3.Text == "")
             {
                 textBox3.Text = "dd.MM.yyyy";
                 textBox3.ForeColor = Color.LightGray;
@@ -422,26 +426,24 @@ namespace TODOLIST
                 {
                     DateTime tarih = Convert.ToDateTime(dataGridView1.SelectedRows[0].Cells["Tarih"].Value);
 
-                    
                     SaveFileDialog saveFileDialog = new SaveFileDialog();
                     saveFileDialog.Filter = "PDF Files (*.pdf)|*.pdf";
-                    saveFileDialog.FileName = $"{tarih:yyyy-MM-dd}_Kayitlar.pdf"; // Varsayılan dosya adı
-                    saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop); // Başlangıçta masaüstü gösterilsin
+                    saveFileDialog.FileName = $"{tarih:yyyy-MM-dd}_Kayitlar.pdf";
+                    saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
                     if (saveFileDialog.ShowDialog() == DialogResult.OK)
                     {
                         string dosyaYolu = saveFileDialog.FileName;
 
-                        
-                        Document doc = new Document(PageSize.A4);
+                        var pdfWriter = new PdfWriter(dosyaYolu);
+                        var pdfDoc = new PdfDocument(pdfWriter);
+                        var doc = new Document(pdfDoc, PageSize.A4);
 
-                        
-                        PdfWriter.GetInstance(doc, new FileStream(dosyaYolu, FileMode.Create));
-                        doc.Open();
 
-                        
+
                         doc.Add(new Paragraph($"Tarih: {tarih:dd.MM.yyyy}"));
                         doc.Add(new Paragraph(""));
+
 
                         foreach (DataGridViewRow row in dataGridView1.Rows)
                         {
@@ -452,7 +454,6 @@ namespace TODOLIST
                                 string yapilacaklarListesi = row.Cells["Yapılacaklar_Listesi"].Value.ToString();
                                 List<string> yapilacaklarListe = yapilacaklarListesi.Split(',').Select(item => "*" + item.Trim()).ToList();
 
-                                // Yapılacak iş ve yapılacaklar listesi ekleyelim
                                 doc.Add(new Paragraph($"Yapılacak İş: {yapilacakIs}"));
 
                                 foreach (string yapilacak in yapilacaklarListe)
@@ -460,12 +461,10 @@ namespace TODOLIST
                                     doc.Add(new Paragraph(yapilacak));
                                 }
 
-                                
                                 doc.Add(new Paragraph("--------------------------------------------------"));
                             }
                         }
 
-                        
                         doc.Close();
 
                         XtraMessageBox.Show("Veriler PDF olarak kaydedildi.", "Bilgi", MessageBoxButtons.OK);
@@ -485,13 +484,108 @@ namespace TODOLIST
         private void btnYazıcı_Click(object sender, EventArgs e)
         {
 
-            
         }
 
         private void btnBildirim_Click(object sender, EventArgs e)
         {
 
-            
+        }
+
+        private void btnHTMLkyt_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                try
+                {
+                    DateTime tarih = Convert.ToDateTime(dataGridView1.SelectedRows[0].Cells["Tarih"].Value);
+
+                    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                    saveFileDialog.Filter = "HTML Files (*.html)|*.html";
+                    saveFileDialog.FileName = $"{tarih:yyyy-MM-dd}_Kayitlar.html"; // Varsayılan dosya adı
+                    saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop); // Başlangıçta masaüstü gösterilsin
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string dosyaYolu = saveFileDialog.FileName;
+
+                        using (StreamWriter writer = new StreamWriter(dosyaYolu))
+                        {
+
+                            writer.WriteLine($@"
+<html>
+<head>
+<title>Veri Kaydı</title>
+<style>
+body
+{{
+    background: linear-gradient(to left top, black,white);
+    font-family: Arial, sans-serif;    
+}}
+h2 {{
+    font-size: 20px;
+    color: blue; 
+}}
+h1 {{
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: red;
+}}
+p {{
+    font-size: 14px;
+    margin-bottom: 5px;
+    position: relative;
+    padding-left: 20px;
+}}
+p::before {{
+    content: '\2022'; 
+    position: absolute;
+    left: 0;
+}}
+
+</style>
+</head>
+<body>
+<h1>Tarih: {tarih:dd.MM.yyyy}</h1>
+");
+
+                            foreach (DataGridViewRow row in dataGridView1.Rows)
+                            {
+                                DateTime currentTarih = Convert.ToDateTime(row.Cells["Tarih"].Value);
+                                if (currentTarih.Date == tarih.Date)
+                                {
+                                    string yapilacakIs = row.Cells["Yapılacak_İş"].Value.ToString();
+                                    string yapilacaklarListesi = row.Cells["Yapılacaklar_Listesi"].Value.ToString();
+                                    List<string> yapilacaklarListe = yapilacaklarListesi.Split(',').Select(item => "" + item.Trim()).ToList();
+
+                                    writer.WriteLine($"<h2>Yapılacak İş: {yapilacakIs}</h2>");
+
+                                    foreach (string yapilacak in yapilacaklarListe)
+                                    {
+                                        writer.WriteLine($"<p>{yapilacak}</p>");
+                                    }
+                                }
+                            }
+
+                            writer.WriteLine(@"  
+</body>
+</html>
+");
+                        }
+
+                        XtraMessageBox.Show("Veriler HTML olarak kaydedildi.", "Bilgi", MessageBoxButtons.OK);
+                    }
+                }
+                catch (Exception hata)
+                {
+                    XtraMessageBox.Show("Hata meydana geldi: " + hata.Message);
+                }
+            }
+            else
+            {
+                XtraMessageBox.Show("Lütfen bir kayıt seçiniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+           
         }
     }
 }
