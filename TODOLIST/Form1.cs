@@ -13,21 +13,24 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Geom;
 using iText.Layout;
 using iText.Layout.Element;
-
-
+using System.Text;
+using System.Drawing.Printing;
 
 namespace TODOLIST
 {
     public partial class Form1 : XtraForm
     {
-
-        ///readonly SqlConnection baglanti = new SqlConnection("Server=192.168.1.22;Initial Catalog=TODOLIST;Integrated Security=False;User Id=sa;Password=Sifre123");
+        //readonly SqlConnection baglanti = new SqlConnection("Server=192.168.1.22;Initial Catalog=TODOLIST;Integrated Security=False;User Id=sa;Password=Sifre123");
         readonly SqlConnection baglanti = new SqlConnection("Data Source = RAMAZAN; Initial Catalog = TODOLIST; Integrated Security = True");
         readonly List<DateTime> tarihler = new List<DateTime>();
+        PrintDocument printDoc = new PrintDocument();
+
+        private Dictionary<Keys, SimpleButton> shortcutButtons = new Dictionary<Keys, SimpleButton>();
 
         public Form1()
         {
             InitializeComponent();
+           
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -38,6 +41,19 @@ namespace TODOLIST
             baglanti.Open();
             GetTarihlerFromSQL();
             GorevGetir();
+
+            shortcutButtons.Add(Keys.K, simpleButton1);
+            shortcutButtons.Add(Keys.A, simpleButton5);
+            shortcutButtons.Add(Keys.G, btnGuncelle);
+            shortcutButtons.Add(Keys.S, simpleButton2);
+            shortcutButtons.Add(Keys.E, simpleButton3);
+            shortcutButtons.Add(Keys.C, simpleButton4);
+            shortcutButtons.Add(Keys.Q, btnEXCELkyt);
+            shortcutButtons.Add(Keys.W, btnTxtKayit);
+            shortcutButtons.Add(Keys.R, btnPDFkyt);
+            shortcutButtons.Add(Keys.T, btnHTMLkyt);
+            shortcutButtons.Add(Keys.Y, btnYazıcı);
+            shortcutButtons.Add(Keys.U, btnBildirim);
 
         }
 
@@ -483,7 +499,7 @@ namespace TODOLIST
 
         private void btnYazıcı_Click(object sender, EventArgs e)
         {
-
+            printDocument1.Print();
         }
 
         private void btnBildirim_Click(object sender, EventArgs e)
@@ -585,7 +601,98 @@ p::before {{
                 XtraMessageBox.Show("Lütfen bir kayıt seçiniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-           
+
+        }
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && shortcutButtons.ContainsKey(e.KeyCode))
+            {
+                shortcutButtons[e.KeyCode].PerformClick();
+            }
+        }
+
+        private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                try
+                {
+                    DateTime tarih = Convert.ToDateTime(dataGridView1.SelectedRows[0].Cells["Tarih"].Value);
+                    StringBuilder sb = new StringBuilder();
+
+                    
+                    sb.AppendLine($"Tarih: {tarih:dd.MM.yyyy}");
+                    sb.AppendLine();
+
+                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    {
+                        DateTime currentTarih = Convert.ToDateTime(row.Cells["Tarih"].Value);
+                        if (currentTarih.Date == tarih.Date)
+                        {
+                            string yapilacakIs = row.Cells["Yapılacak_İş"].Value.ToString();
+                            string yapilacaklarListesi = row.Cells["Yapılacaklar_Listesi"].Value.ToString();
+                            List<string> yapilacaklarListe = yapilacaklarListesi.Split(',').Select(item => "*" + item.Trim()).ToList();
+
+                            sb.AppendLine($"Yapılacak İş: {yapilacakIs}");
+
+                            foreach (string yapilacak in yapilacaklarListe)
+                            {
+                                sb.AppendLine(yapilacak);
+                            }
+
+                            sb.AppendLine("--------------------------------------------------");
+                        }
+                    }
+
+                    
+                    PrintDialog printDialog = new PrintDialog();
+                    if (printDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        
+                        printDoc.PrinterSettings = printDialog.PrinterSettings;
+                    }
+                    else
+                    {
+                        return; 
+                    }
+
+                    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                    saveFileDialog.Filter = "Text Files (*.txt)|*.txt";
+                    saveFileDialog.FileName = $"{tarih:yyyy-MM-dd}_Kayitlar.txt"; 
+                    saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop); 
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string dosyaYolu = saveFileDialog.FileName;
+                        
+                        File.WriteAllText(dosyaYolu, sb.ToString());
+
+                        
+                        PrintDocument printDoc = new PrintDocument();
+                        printDoc.DocumentName = "ToDoList_Print";
+
+                        printDoc.PrintPage += (s, pe) =>
+                        {
+                            using (Font font = new Font("Arial", 12))
+                            {
+                                pe.Graphics.DrawString(sb.ToString(), font, Brushes.Black, new PointF(100, 100));
+                            }
+                        };
+
+                        PrintPreviewDialog previewDialog = new PrintPreviewDialog();
+                        previewDialog.Document = printDoc;
+                        previewDialog.ShowDialog();
+                    }
+                }
+                catch (Exception hata)
+                {
+                    XtraMessageBox.Show("Hata meydana geldi: " + hata.Message);
+                }
+            }
+            else
+            {
+                XtraMessageBox.Show("Lütfen bir kayıt seçiniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
     }
 }

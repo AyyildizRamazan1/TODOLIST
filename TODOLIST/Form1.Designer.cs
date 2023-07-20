@@ -53,6 +53,7 @@ namespace TODOLIST
             this.btnHTMLkyt = new DevExpress.XtraEditors.SimpleButton();
             this.btnBildirim = new DevExpress.XtraEditors.SimpleButton();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             ((System.ComponentModel.ISupportInitialize)(this.calendarControl1.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -327,6 +328,10 @@ namespace TODOLIST
             this.notifyIcon1.Text = "notifyIcon1";
             this.notifyIcon1.Visible = true;
             // 
+            // printDocument1
+            // 
+            this.printDocument1.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.printDocument1_PrintPage);
+            // 
             // Form1
             // 
             this.Appearance.BackColor = System.Drawing.Color.LavenderBlush;
@@ -355,12 +360,14 @@ namespace TODOLIST
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.calendarControl1);
             this.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TO DO LIST";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.calendarControl1.CalendarTimeProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
@@ -392,6 +399,7 @@ namespace TODOLIST
         private DevExpress.XtraEditors.SimpleButton btnHTMLkyt;
         private DevExpress.XtraEditors.SimpleButton btnBildirim;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Drawing.Printing.PrintDocument printDocument1;
     }
 }
 
