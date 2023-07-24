@@ -29,7 +29,6 @@ namespace TODOLIST
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.calendarControl1 = new DevExpress.XtraEditors.Controls.CalendarControl();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -51,8 +50,6 @@ namespace TODOLIST
             this.btnPDFkyt = new DevExpress.XtraEditors.SimpleButton();
             this.btnYazıcı = new DevExpress.XtraEditors.SimpleButton();
             this.btnHTMLkyt = new DevExpress.XtraEditors.SimpleButton();
-            this.btnBildirim = new DevExpress.XtraEditors.SimpleButton();
-            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             ((System.ComponentModel.ISupportInitialize)(this.calendarControl1.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -308,25 +305,10 @@ namespace TODOLIST
             this.btnHTMLkyt.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnHTMLkyt.ImageOptions.Image")));
             this.btnHTMLkyt.Location = new System.Drawing.Point(823, 247);
             this.btnHTMLkyt.Name = "btnHTMLkyt";
-            this.btnHTMLkyt.Size = new System.Drawing.Size(122, 41);
+            this.btnHTMLkyt.Size = new System.Drawing.Size(251, 41);
             this.btnHTMLkyt.TabIndex = 22;
             this.btnHTMLkyt.Text = "HTML Kayıt";
             this.btnHTMLkyt.Click += new System.EventHandler(this.btnHTMLkyt_Click);
-            // 
-            // btnBildirim
-            // 
-            this.btnBildirim.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnBildirim.ImageOptions.Image")));
-            this.btnBildirim.Location = new System.Drawing.Point(951, 246);
-            this.btnBildirim.Name = "btnBildirim";
-            this.btnBildirim.Size = new System.Drawing.Size(123, 41);
-            this.btnBildirim.TabIndex = 23;
-            this.btnBildirim.Text = "Bildirim";
-            this.btnBildirim.Click += new System.EventHandler(this.btnBildirim_Click);
-            // 
-            // notifyIcon1
-            // 
-            this.notifyIcon1.Text = "notifyIcon1";
-            this.notifyIcon1.Visible = true;
             // 
             // printDocument1
             // 
@@ -338,7 +320,6 @@ namespace TODOLIST
             this.Appearance.Options.UseBackColor = true;
             this.Appearance.Options.UseFont = true;
             this.ClientSize = new System.Drawing.Size(1362, 770);
-            this.Controls.Add(this.btnBildirim);
             this.Controls.Add(this.btnHTMLkyt);
             this.Controls.Add(this.btnYazıcı);
             this.Controls.Add(this.btnPDFkyt);
@@ -397,8 +378,6 @@ namespace TODOLIST
         private DevExpress.XtraEditors.SimpleButton btnPDFkyt;
         private DevExpress.XtraEditors.SimpleButton btnYazıcı;
         private DevExpress.XtraEditors.SimpleButton btnHTMLkyt;
-        private DevExpress.XtraEditors.SimpleButton btnBildirim;
-        private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Drawing.Printing.PrintDocument printDocument1;
     }
 }

@@ -20,25 +20,40 @@ namespace TODOLIST
 {
     public partial class Form1 : XtraForm
     {
+
         //readonly SqlConnection baglanti = new SqlConnection("Server=192.168.1.22;Initial Catalog=TODOLIST;Integrated Security=False;User Id=sa;Password=Sifre123");
-        readonly SqlConnection baglanti = new SqlConnection("Data Source = RAMAZAN; Initial Catalog = TODOLIST; Integrated Security = True");
+        //readonly SqlConnection baglanti = new SqlConnection("Data Source = RAMAZAN; Initial Catalog = TODOLIST; Integrated Security = True");
         readonly List<DateTime> tarihler = new List<DateTime>();
         PrintDocument printDoc = new PrintDocument();
 
         private Dictionary<Keys, SimpleButton> shortcutButtons = new Dictionary<Keys, SimpleButton>();
+        private SqlConnection baglanti;
+
 
         public Form1()
         {
             InitializeComponent();
-           
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             textBox3.Text = "dd.MM.yyyy";
             textBox3.ForeColor = Color.LightGray;
+            try
+            {
 
-            baglanti.Open();
+                string setupDosyaAdi = @"C:\\Users\\Ramaz\\source\\repos\\TODOLIST\\TODOLIST\\obj\\Debug\\BağlantıYolu.txt";
+                string setupDosyaYolu = System.IO.Path.Combine(Application.StartupPath, setupDosyaAdi);
+                string connectionString = File.ReadAllText(setupDosyaYolu);
+                 baglanti = new SqlConnection(connectionString);
+                baglanti.Open();
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show("Hata meydana geldi: " + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
             GetTarihlerFromSQL();
             GorevGetir();
 
@@ -53,12 +68,12 @@ namespace TODOLIST
             shortcutButtons.Add(Keys.R, btnPDFkyt);
             shortcutButtons.Add(Keys.T, btnHTMLkyt);
             shortcutButtons.Add(Keys.Y, btnYazıcı);
-            shortcutButtons.Add(Keys.U, btnBildirim);
-
+           
         }
 
         public void GetTarihlerFromSQL()
         {
+
             tarihler.Clear();
             string query = "SELECT Tarih FROM Görev WHERE Tarih >= @BaslangicTarihi AND Tarih < @BitisTarihi";
             DateTime selectedDate = calendarControl1.SelectionStart;
@@ -102,6 +117,7 @@ namespace TODOLIST
                     insertCommand.ExecuteNonQuery();
                 }
                 XtraMessageBox.Show("Kayıt Eklendi", "Bilgi", MessageBoxButtons.OK);
+                
             }
             catch (Exception hata)
             {
@@ -115,11 +131,7 @@ namespace TODOLIST
             calendarControl1.Refresh();
             calendarControl1_DateTimeChanged(null, null);
 
-            string mesaj = "Kayıt tamamlandı";
-            string baslik = "Bildirim Başlığı";
 
-
-            notifyIcon1.ShowBalloonTip(3000, baslik, mesaj, ToolTipIcon.Info);
 
         }
 
@@ -501,12 +513,7 @@ namespace TODOLIST
         {
             printDocument1.Print();
         }
-
-        private void btnBildirim_Click(object sender, EventArgs e)
-        {
-
-        }
-
+        
         private void btnHTMLkyt_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count > 0)
@@ -620,7 +627,7 @@ p::before {{
                     DateTime tarih = Convert.ToDateTime(dataGridView1.SelectedRows[0].Cells["Tarih"].Value);
                     StringBuilder sb = new StringBuilder();
 
-                    
+
                     sb.AppendLine($"Tarih: {tarih:dd.MM.yyyy}");
                     sb.AppendLine();
 
@@ -644,30 +651,30 @@ p::before {{
                         }
                     }
 
-                    
+
                     PrintDialog printDialog = new PrintDialog();
                     if (printDialog.ShowDialog() == DialogResult.OK)
                     {
-                        
+
                         printDoc.PrinterSettings = printDialog.PrinterSettings;
                     }
                     else
                     {
-                        return; 
+                        return;
                     }
 
                     SaveFileDialog saveFileDialog = new SaveFileDialog();
                     saveFileDialog.Filter = "Text Files (*.txt)|*.txt";
-                    saveFileDialog.FileName = $"{tarih:yyyy-MM-dd}_Kayitlar.txt"; 
-                    saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop); 
+                    saveFileDialog.FileName = $"{tarih:yyyy-MM-dd}_Kayitlar.txt";
+                    saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
                     if (saveFileDialog.ShowDialog() == DialogResult.OK)
                     {
                         string dosyaYolu = saveFileDialog.FileName;
-                        
+
                         File.WriteAllText(dosyaYolu, sb.ToString());
 
-                        
+
                         PrintDocument printDoc = new PrintDocument();
                         printDoc.DocumentName = "ToDoList_Print";
 
@@ -694,5 +701,7 @@ p::before {{
                 XtraMessageBox.Show("Lütfen bir kayıt seçiniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
+        
     }
 }
