@@ -1,1 +1,1 @@
-readonly SqlConnection baglanti = new SqlConnection("Data Source = RAMAZAN; Initial Catalog = TODOLIST; Integrated Security = True");
+İsterseniz veri tabanı bağlantınızı => Data Source = "PC ADI"; Initial Catalog = "Tablo Adı"; Integrated Security = "True" <= şeklinde ekliyebilir ve dosya yolundan bağlantı alabilirsiniz.
